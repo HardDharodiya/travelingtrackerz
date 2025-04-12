@@ -1,0 +1,24 @@
+"""
+
+
+REQUEST-RESPOND MODEL OF WEBSITE:
+
+USER INPUT: BusNo(XXXX) + Route(Y) + ClientID(20*Z)
+BUSNO = 0057
+ROUTE = 0 - Breakdown, 1 - Running, 2 - Traffic
+CLIENTID = Alpha-Numeric-SpecialChars String length of 20
+
+REQUEST USER URL: URI/user?b=00057&r=1cid=9XWO8VcuBP_-wYf-AAAB
+
+ESP32 FETCH URL: URL/fetchData
+
+FETCH URL RESPOND: (RES) : XXXX-Y
+
+
+
+ESP32 DATA RESPOND: LATITUDE II.FFFFFF + LONGTITUDE II.FFFFFF + STATUS B
+
+URI/response?lat=23.242526&long=72.737475&st=1
+
+
+"""

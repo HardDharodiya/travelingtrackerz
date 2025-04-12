@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Range</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: url('https://maps.gstatic.com/mapfiles/api-3/images/mapctrls.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #2b3a67;
+        }
+        header {
+            background-color: #1a2a45;
+            padding: 15px;
+            text-align: center;
+        }
+        header h1 {
+            color: #f0f8ff;
+            font-size: 28px;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+        .main-content { 
+            text-align: center;
+            margin-top: 50px;
+        }
+        .bus-number-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 50px auto;
+            max-width: 900px;
+        }
+        .bus-number {
+            width: 80px;
+            height: 80px;
+            margin: 15px;
+            background: linear-gradient(to right, #c4dff6, #90bae1);
+            color: #1a2a45;
+            font-size: 18px;
+            text-align: center;
+            line-height: 80px;
+            border-radius: 8px;
+            border: 2px solid #1a2a45;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .bus-number:hover {
+            background: linear-gradient(to right, #1a2a45, #2e496b);
+            color: #f0f8ff;
+            border-color: #2e496b;
+        }
+        
+        footer {
+            background-color: #1a2a45;
+            color: #f0f8ff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Travelling Trackerz</h1>
+    </header>
+    <div class="main-content">
+        <h1>Select Bus</h1>
+    </div>
+    <div class="bus-number-container" id="busNumbers"></div>
+    <footer>
+        <p>&copy; 2024 Travelling Trackerz. All Rights Reserved.</p>
+    </footer>
+    <script>
+        // Get URL parameters to determine the range
+        const params = new URLSearchParams(window.location.search);
+        const start = parseInt(params.get('start'));
+        const end = parseInt(params.get('end'));
+
+        // Generate bus numbers dynamically
+        const container = document.getElementById('busNumbers');
+        for (let i = start; i <= end; i++) {
+            const busDiv = document.createElement('div');
+            busDiv.className = 'bus-number';
+            busDiv.textContent = i;
+            busDiv.onclick = () => openTrackingScreen(i);
+            container.appendChild(busDiv);
+        }
+
+        // Navigate to the tracking screen
+        function openTrackingScreen(busNumber) {
+            window.location.href = `tracking.html?bus=${busNumber}`;
+        }
+    </script>
+</body>
+</html>

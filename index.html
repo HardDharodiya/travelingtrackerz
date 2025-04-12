@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <title>Travelling Trackerz</title>
+    <style>
+        @font-face {
+            font-family: "Android Assassin";
+            src: url("/assets/AndroidAssassin-WXXY.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            /* Prevent automatic scrollbar generation */
+        }
+
+        /* General body styling */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            /* background: url('https://i.imgur.com/6yE5oMO.png') no-repeat center center fixed; */
+            background-size: cover;
+            color: #2b3a67;
+            /* overflow: hidden; */
+            /* opacity: 0; */
+            padding-top: 80px;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            margin: 0;
+            /* Ensure no default margin causing overflow */
+            overflow-y: scroll;
+            /* Ensure scrolling is still possible */
+        }
+
+        
+        /* Hide scrollbar for Chrome, Edge, and Safari */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge, and Firefox */
+        body {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        .bg-opacity {
+            position: relative;
+
+        }
+
+        .bg-opacity::before {
+            background: url('https://i.imgur.com/6yE5oMO.png') no-repeat center center fixed;
+            content: '';
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+            background-size: cover;
+        }
+
+
+        /* Footer */
+        footer {
+            background-color: #1a2a45;
+            color: #f0f8ff;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            display: block;
+            width: 100%;
+            bottom: 0;
+        }
+
+        @media (max-width: 500px) {
+            header h1.title {
+                font-size: 9px;
+            }
+
+            footer p {
+                font-size: 9px;
+            }
+        }
+
+        @keyframes phone_move {
+            0% {
+                opacity: 0;
+            }
+
+            5% {
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 100;
+            }
+
+            25% {
+                opacity: 100;
+            }
+
+            30% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes search_move {
+            0% {
+                opacity: 0;
+            }
+
+            32% {
+                opacity: 0;
+            }
+
+            37% {
+                opacity: 100;
+            }
+
+            50% {
+                opacity: 100;
+            }
+
+            55% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 924px) {
+            .title {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                background-size: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 11px;
+            }
+        }
+
+        h1.center-text {
+            display: none;
+            text-align: center;
+            font-size: 32px;
+            color: #1a2a45;
+            margin-top: 50px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .main-content {
+            display: none;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .bus-number-container {
+            transform: translateY(-80px);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 90px auto;
+            max-width: 900px;
+        }
+
+        .bus-number {
+            width: 100px;
+            height: 80px;
+            margin: 15px;
+            background: linear-gradient(to right, #1a2a45, #2e496b);
+            color: #ffffff;
+            font-size: 35px;
+            font-weight: bolder;
+            text-align: center;
+            line-height: 80px;
+            border-radius: 8px;
+            border: 3px solid #1a2a45;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+
+
+        .bus-number:disabled {
+            pointer-events: none;
+        }
+
+        .bus-number:hover {
+            background: linear-gradient(to right, #edf6ff, #a1aeba);
+            color: #1a2a45;
+            border-color: #1a2a45;
+            box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+            transform: translateY(-2px);
+        }
+
+        .bus-number:active {
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+        /* Base styles for the floating button */
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 80px;
+            /* Larger button size */
+            height: 80px;
+            border-color: #1a2a45;
+            /* Larger button size */
+            background-color: #ffffff;
+            color: #101659;
+            font-size: 22px;
+            display: flex;
+            font-weight: bolder;
+            /* Enable flexbox */
+            align-items: center;
+            /* Center text vertically */
+            justify-content: center;
+            /* Center text horizontally */
+            border: 3px solid #101659;
+            /* Border size and color */
+            border-radius: 50%;
+            box-shadow: 0 4px 6px rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            z-index: 1000;
+        }
+
+        /* Hover effect */
+        .floating-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+            color: white;
+        }
+
+        /* Make it responsive */
+        @media (max-width: 600px) {
+            .floating-button {
+                width: 70px;
+                /* Smaller size for responsiveness */
+                height: 70px;
+                font-size: 19px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+        }
+
+
+        header {
+            background-color: #1a2a45;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            /* Ensures it stays above other elements */
+        }
+
+
+        header h1 {
+            font-family: "Android Assassin", sans-serif;
+            font-size: 36px;
+            color: #333;
+        }
+
+        header h1.title {
+            color: #f0f8ff;
+            font-size: 28px;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 2px;
+            flex: 1;
+            /* Take remaining space for centering */
+        }
+
+        .title {
+            color: white;
+            font-size: 50px;
+            text-align: center;
+            letter-spacing: 0.4vw;
+        }
+
+        .title span {
+            display: inline-block;
+        }
+
+        .title .blue {
+            color: #007BFF;
+        }
+
+        .title .white {
+            color: white;
+        }
+
+        header .bus-icon {
+
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header .user-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            padding-right: 25px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header .bus-icon img,
+        header .user-icon img {
+            width: 100%;
+            /* Fit icon inside circle */
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="bus-icon">
+            <img src="https://i.imgur.com/EWe8j42.png" alt="Bus Icon">
+        </div>
+        <h1 class="title">
+            <span class="blue">Travel</span><span class="white">ling</span>
+            <span class="blue">Track</span><span class="white">erz</span>
+        </h1>
+        <div class="user-icon">
+            <img src="https://i.imgur.com/W5VNfWF.png" alt="User Icon">
+        </div>
+    </header>
+    <h2 style="text-align: center; ">Select Bus number from below list :</h2>
+    <div class="bus-number-container" id="busNumberContainer">
+        <!-- Bus numbers will be populated here dynamically -->
+    </div>
+    <a href="/route-selection.html" class="floating-button">Route</a>
+    <footer>
+        <p>&copy; 2024 Travelling Trackerz. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+
+        loadBusNumbers();
+
+
+        function loadBusNumbers() {
+            const busNumberContainer = document.getElementById('busNumberContainer');
+            for (let i = 1; i <= 57; i++) {
+                const busDiv = document.createElement('div');
+                busDiv.classList.add('bus-number');
+                busDiv.textContent = `${i}`;
+                busDiv.onclick = () => {
+                    openTrackingScreen(i);
+                };
+                busNumberContainer.appendChild(busDiv);
+            }
+        }
+        // function openBusRange(i) {
+        //     let start = i.split('-')[0];
+        //     let end = i.split('-')[1];
+        //     window.location.href = `bus-range?start=${start}&end=${end}`;
+        // }
+        // Navigate to the tracking screen for a selected bus
+        function openTrackingScreen(busNumber) {
+            window.location.href = `tracking.html?bus=${busNumber}&t=1`;
+        }
+    </script>
+</body>
+
+</html>

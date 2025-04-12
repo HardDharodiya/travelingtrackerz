@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Routes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet"> 
+    <title>Travelling Trackerz</title>
+    <style>
+
+        @font-face {
+            font-family: "Android Assassin";
+            src: url("/assets/AndroidAssassin-WXXY.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        /* Basic styling for body and header */
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #0d47a1, #1565c0);
+            color: #e3f2fd;
+        }
+        
+ 
+
+        nav h1 {
+            font-size: 24px;
+            margin: 1;
+            color: #ffffff;
+            text-transform: uppercase;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+        
+ 
+        
+        /* Style for the header bar */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: #1565c0;
+            color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-bar p {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .header-bar .logo {
+            font-weight: bold;
+            font-size: 22px;
+        }
+        
+        /* Style for the route list */
+        .route-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+        }
+        
+ 
+        /* Style for the route list */
+        .route-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+        }
+        
+        .route-box {
+            background: #1e88e5;
+            color: #ffffff;
+            font-size: 18px;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .route-box:hover {
+            background: #1565c0;
+        }
+        
+
+        /* Style for the tracking window */
+   .tracking-container {
+    position: fixed; /* Stay relative to the viewport */
+    top: 50%; /* Vertically center */
+    left: 50%; /* Horizontally center */
+    transform: translate(-50%, -50%); /* Adjust for its dimensions */
+    max-width: 1200px; /* Make it wider if needed */
+    width: 60%; /* Responsive width */
+    background: #0d47a1; /* Semi-transparent for better overlay */
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    display: none; /* Initially hidden */
+    z-index: 1000; /* Ensure it's on top of other elements */
+}
+
+        .track-btn {
+            margin-top: 20px;
+            padding: 12px 40px;
+            font-size: 18px;
+            background: #ffffff;
+            color: #0d47a1;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        .bus-circle {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: #1e88e5;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 4px solid #ffffff;
+        }
+
+        .search-container input {
+            width: 80%;
+            max-width: 300px;
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .icon-container {
+            background-color: #6a1b9a;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        #swap { 
+            background-color: #0e30dc;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px; 
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .search-container input:focus {
+            border: 2px solid #1e88e5;
+        }
+
+            /* Close Button */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #e53935;
+        color: #ffffff;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-btn:hover {
+        background: #d32f2f;
+    }
+
+    /* Back Button */
+    .back-btn {
+        position: absolute;
+        top: 100px;
+        left: 10px;
+        background: #1e88e5;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 5px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 768px) {
+
+    }
+
+    .back-btn:hover {
+        background: #1565c0;
+    }
+
+            /* Header Layout */
+header {
+    background-color: #1a2a45;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Distribute items */
+}
+header h1 {
+    font-family: "Android Assassin", sans-serif;
+    font-size: 36px;
+    color: #333;
+}
+
+header h1.title {
+    color: #f0f8ff;
+    font-size: 28px;
+    margin: 0;
+    text-align: center;
+    letter-spacing: 2px;
+    flex: 1; /* Take remaining space for centering */
+}
+.title {
+            color: white;
+            font-size: 50px;
+            text-align: center;
+            letter-spacing: 0.4vw;
+        }
+
+        .title span {
+            display: inline-block;
+        }
+
+        .title .blue {
+            color: #007BFF;
+        }
+
+        .title .white {
+            color: white;
+        }
+
+header .bus-icon,
+header .user-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header .bus-icon img,
+header .user-icon img {
+    width: 100%; /* Fit icon inside circle */
+    height: 100%;
+    object-fit: contain;
+}
+
+.search-box {
+    display: flex;
+    margin: 20px 0;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+.search-box button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.search-box button:hover {
+    background-color: #1565c0;
+}
+
+    </style>
+</head>
+<body>
+      <!-- Top Header Bar -->
+      <header>
+        <div class="bus-icon">
+            <img src="https://i.imgur.com/EWe8j42.png" alt="Bus Icon">
+        </div>
+        <h1 class="title">
+            <span class="blue">Travel</span><span class="white">ling</span>
+            <span class="blue">Track</span><span class="white">erz</span>
+        </h1>
+        <div class="user-icon">
+            <img src="https://i.imgur.com/W5VNfWF.png" alt="User Icon">
+        </div>
+    </header>
+
+    <!-- Page Header --> 
+        <h1 style="text-align: center;">Bus Routes</h1> 
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter search text...">
+            <button id="searchButton" onclick="searchEvent()">Search</button>
+        </div>
+        
+    <!-- Route List Section -->
+    <div class="route-container" id="routeList">
+        <!-- Routes will be dynamically inserted here -->
+    </div>
+    <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+    <!-- Tracking Window -->
+        <button class="back-btn" id="backButton">&larr; Back</button>
+    <div class="tracking-container" id="trackingContainer">
+        <button class="close-btn" id="closeButton">&times;</button> 
+        <h2>Track Your Bus</h2>
+        <div class="bus-circle" id="busCircle">57</div>
+    
+        <div class="search-container">
+            <input type="text" id="source" style="text-align: center;" placeholder="Source..." readonly>  
+            <button title="swap" id="swap"><i class="fas fa-exchange-alt"></i></button>
+            <input type="text" id="destination" style="text-align: center;" placeholder="Destination..." readonly>
+        </div>
+        
+        <button class="track-btn" id="trackBus">Track</button>
+    </div>
+    
+
+  
+<script> // Initialize Socket.io 
+        // Array with bus routes (example structure)
+
+
+
+
+
+        
+
+        const routes = [
+["Saurashtra University", "Trikon Baug"],
+["Pradyuman Park", "Raiya Gaam"],
+["Jivraj Park", "Madhapar Chokadi"],
+["Aajidam ", "G.I.D.C. Gate 3"],
+["Raiya Gaam", "Tramba"],
+["Santoshinagar", "Tramba Gam"],
+["Bajrangvadi Circle", "Bhakatinagar Circle"],
+["Greenland Chokadi", "Labhubhai Engineering College"],
+["Arpit Eng. College (Hadala Gam)", "Saurashtra University"],
+["-", "-"],
+["Shapar Veraval", "Trikon Baug"],
+["-", "-"],
+["Kothariya Chokadi", "Lal bahadur shastriavas"],
+["Kothariya Gam", "Navagam"],
+["G.I.D.C. Gate 3", "Kothariya Gam"],
+["Kothariyagam", "Saurashtra University"],
+["Saurashtrar University", "Tramba Gam"],
+["Aajidam ", "G.I.D.C. Gate 3"],
+["131 Slam Quarter", "Vavdi Gam"],
+["Ghanteshvar S.R.P. Camp", "Shapar Veraval"],
+["Marketing Yard", "Shantiniketan aveue (Raiya Gam)"],
+["-", "-"],
+["Mavdi Gam", "Pradyuman Park"],
+["G.I.D.C. Gate 3", "Trikon Baug"],
+["131 Slam Quarter", "Jivraj Park"],
+["Santoshinagar", "Vavdi Gam"],
+["Raiyadhar Salam Quarter", "Trikon Baug"],
+["Gujarat Housing Quarter", "Jivraj Park"],
+["-", "-"],
+["Trikon Baug circular", "Trikon Baug"],
+["-", "-"],
+["Parsananagar", "Tramba Gam"],
+["Ashapura Mandir", "Parsananagar"],
+["Marketing Yard", "Munjka Gam"],
+["Shapar Veraval", "Trikon Baug"],
+["Bhakatinagar Circle", "Nyaragam Chokadi"],
+["Chhatrapati Shivaji Township", "Vinodnagar"],
+["Aajidam ", "Madhapar Gam"],
+["-", "-"],
+["Santoshinagar", "Saurashtra University"],
+["Gangotri Park", "Vinodnagar"],
+["Greenland Chokadi", "Jivraj Park"],
+["Akshar Vatika", "Om Resi."],
+["Tramba Gam", "Trikon Baug"],
+["Ratanpar", "Saurashtra University"],
+["Arpit Eng. College (Hadala Gam)", "Trikon Baug"],
+["Kothariyagam", "Saurashtra University"],
+["-", "-"],
+["-", "-"],
+["-", "-"],
+["Punit Nagar", "S.R.P. Camp"],
+["-", "-"],
+["-", "-"],
+["Kothariya Chokadi", "Ghanteshvar S.R.P. Camp"],
+["Gondal Chokadi", "Ratanpar"],
+["-", "-"],
+["Government Eng. College", "Trikon Baug"],
+
+            // Add more routes as needed
+        ];
+
+        let pickup_points = [
+    ["Saurashtra University", "B. T. Savani (Kidney) Hospital", "Akashvani Chowk", "Panchayat Nagar Chowk", "Indira Circle", "Indubai Mahasatiji Chowk", "Swaminarayan Mandir / Mahila College Chowk", "Astron Chowk", "Hemu Gadhvi Hall", "Ramkrushna Ashram", "Malaviya Chowk", "Trikon Baug"], 
+//# 1
+
+    ["H. N. Shukla College", "Pradyuman Park", "Marketing Yard", "Bhagirath Society", "Lakheshwar Society - R.T.O. Office", "Gram Udyog Mandir Pedak", "Satellite Chowk - Maruti Nagar Approach Chowk", "Ayak Nagar - Pedak Chowk", "Narayan Nagar Approach Road", "Champak Nagar - Panino Ghodo", "Patel Vadi", "Parevadi Chowk", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Dharmendrasinhji College", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Swaminarayan Chowk", "Indubai Mahasatiji Chowk", "Indira Circle", "Panchayat Nagar Chowk", "Jivan Jyot School", "Sadhu Vaswani School", "Ajanta Park / Janakpuri", "Balaji Park / Satellite Park", "Aalap Green City", "Raiya Gam"], 
+//# 2
+
+    ["Jivraj Park", "Aarya Land Residency", "Jetco Chokdi", "Dream City", "Mavdi Gam", "Mavdi Chowk", "Fuliya Hanuman Mandir", "Mavdi Fire Station", "Anand Bunglow", "Swaminarayan Chowk", "P.D.M. College", "Gurukul", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "I.P. Mission", "Kothi Compound", "Junction Railway Station", "Popatpara Central Jail", "Popatpara", "Central Warehouse", "Bhaktinagar Park"], 
+//# 3
+
+    ["Jubilee Baug", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Swaminarayan Mandir / Mahila College Chowk", "Indubai Mahasatiji Chowk", "K.K.V. Hall", "Atmiya University", "Crystal Mall", "Vrundavan Society", "A.G. Chowk", "Everest Park", "Mota Mauva", "Kankot Kalawad Road", "Vruksh Mandir", "Uma P.T.C. College", "Mukhyamantri Awas Yojana Quarter", "Haripar Gam", "V.V.P. Engineering College", "Virda Vajadi Gam", "Vagudad", "Vad Vajadi", "G.I.D.C. Gate 1", "G.I.D.C. Gate 2", "G.I.D.C. Gate 3"], 
+//# 4
+
+    ["Raiya Village", "Aalap Green City", "Bapa Sitaram Chowk", "Raiya Chowk", "Brahmasamaj Chowk", "Hanuman Madhi", "Alkapuri", "Azad Chowk", "Amrapali Fatak", "Kisanpara Chowk", "Jilla Panchayat Chowk", "Fulchhab Chowk", "Chitralekha Chowk", "Limda Chowk", "Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kanta Stri Vikas Gruh", "Bhaktinagar Circle", "Sheth High School", "Kothariya Colony", "Sorathiyavadi Circle", "Jangleshwar Crossing / Bapunagar", "Satyam Park", "Aji G.I.D.C.", "Field Marshal Chowk", "Government Polytechnic", "Aji Dam", "Mansarovar Society", "Aarti Industrial Area", "Thebachda - Mahika Patiyu", "Krishna International School", "Kalipat", "R.K. University", "Bharad Engineering College", "Tramba Village"], 
+//# 5
+
+    ["Santoshinagar Railway Crossing", "Santoshinagar", "Railnagar", "Central Warehouse", "Popatpara", "Popatpara Central Jail", "Junction Railway Station", "Kothi Compound", "I.P. Mission", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kadvibai School", "Bhaktinagar Circle", "Sheth High School", "Kothariya Colony", "Sorathiyavadi Circle", "Jangleshwar Crossing / Bapunagar", "Satyam Park", "Aji G.I.D.C.", "Field Marshal Chowk", "Government Polytechnic", "Aji Dam", "Mansarovar Society", "Aarti Industrial Area", "Thebachda - Mahika Patiyu", "Krishna International School", "Kalipat", "R.K. University", "Bharad Engineering College", "Tramba Village"], 
+//# 6
+
+    ["Bajrangvadi Circle", "Punitnagar", "Lakhno Bunglow", "Ramapir Chokdi", "Nanavati Chowk", "Raiya Chowkdi", "Brahmasamaj", "Hanuman Madhi", "Alkapuri", "Azad Chowk", "Amrapali Fatak", "Kisanpara Chowk", "Jilla Panchayat Chowk", "Fulchhab Chowk", "Chitralekha Chowk", "Limda Chowk", "Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kanta Stri Vikas Gruh", "Bhaktinagar Circle"], 
+//# 7
+
+    ["Greenland Chowkdi", "Marutinagar 50 Feet Road Chowk", "Gurudev Park", "Ranchhod Ashram", "Parevadi Chowk", "I.P. Mission School", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "S.T Bus", "Arya Samaj", "Kadvibai School", "Makkam Chowk", "Anand Bunglows", "Mavdi Fire Station", "Fuliya Hanuman Mandir", "Mavdi Chowk", "Bapa Sitaram Chowk", "Mavdi Gam", "Dream City", "Jetco Chokdi", "Government Engineering College", "Labhubhai Trivedi Engineering College"], 
+//# 8
+
+    ["Arpit Engineering College", "Darshan Engineering College", "Ratanpar (Ramji Mandir)", "Ratanpar Gam", "Ratanpar Telephone Exchange", "Gauridal", "I.O.C.", "Marwadi College", "Bedi Marketing Yard", "Bedi", "150 Feet Jamnagar Road Crossing", "Mukhyamantri Aavas Yojna Quarter", "Astha Sanghrila", "Krishna Banglows 3", "Manharpura", "Madhapar Chowk", "Vora Society", "Gaytridham", "Vankaner Society", "Bajarang Vadi", "Railway Colony", "Bhomeshwar", "Special School For Boys", "Ruda Office", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Jilla Panchayat Chowk", "Kishanpara Chowk", "Indubai Mahasatiji Chowk", "K.K.V. Hall", "Crystal Mall", "A.G. Society", "Sarita Vihar", "Saurashtra University"], 
+//#9
+
+    ["-"], 
+//#10
+
+    ["Shapar Veraval", "Maruti Nagar", "Shitalamataji Nu Mandir", "Pardi Gam", "Aastha Green City", "Khokhadadad", "A.V. Jasani T.B. Hospital", "Kothariya Solvent", "Gondal Chowkdi", "P and T Colony / Gitanagar", "S.T. Workshop", "Panchshil Society", "Rajshri Auto", "P.D.M. College", "Makkam Chowk", "Bombay Hotel", "S.T. Bus Stand", "Trikon Baug"], 
+//#11
+
+    ["-"], 
+//#12
+    ["Kothariya Chowkdi", "Hudko Police Chowkdi", "Govind Nagar", "Ghanshyam Nagar / Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "I.P. Mission School", "Kothi Compound", "Junction Railway Station", "Popatpara Chowk", "Popatpara", "Central Ware House", "Railnagar", "Santoshi Nagar"], 
+//#13
+
+["Kothariya Gam", "Ranuja Temple", "Gokul Park", "Kothariya Chowk", "Hudco Police Chowki", "Ghanshyam Nagar / Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kevadavadi", "Gundawadi Police Chowki", "Ashapura Temple", "Diwanpara Police Chowki", "Balaji Hanuman", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "I P Mission", "Parevadi Chowk", "Ranchhoddas Ashram", "Gurudev Park", "Shree Ram Park - Kuvadva", "Greenland Chokdi", "Kuvadva Police Chowki", "Navagam"], 
+//#14
+
+["Kothariya Gam", "Ranuja Temple", "Gokul Park", "Kothariya Chowk", "Hudco Police Chowki", "Ghanshyam Nagar / Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Aryasamaj", "S T Bus Stand", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Mahila College Chowk", "Swaminarayan Mandir", "Kotecha Chowk", "Wockhardt Hospital", "K K V Hall", "Atmiya College / Central School", "Crystal Mall", "Vrundavan Society", "A G Society", "Everest Park", "Mota Mauva", "Rangoli Park / Lakshmino Dholo", "Cosmoplex Cinema", "Kankot - Kalawad Road", "Vrukshmandir", "Uma P.T.C. College", "Haripar Village", "V.V.P. Engineering College", "Virda Vajadi Village", "Vagudad Village", "Vadvajadi Village", "G.I.D.C. Gate 1", "G.I.D.C. Gate 2", "G.I.D.C. Gate 3"], 
+//#15
+
+["Kothariya Gam", "Ranuja Temple", "Gokul Park", "Kothariya Chowk", "Hudco Police Chowki", "Ghanshyam Nagar / Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Aryasamaj", "S T Bus Stand", "Trikon Baug", "Limda Chowk", "Chitralekha Chowk", "Fullchhab Chowk", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Mahila College Chowk", "Kotecha Chowk", "Wockhardt Hospital", "K K V Hall", "Atmiya College / Central School", "Crystal Mall", "Vrundavan Society", "A G Society", "Rular Housing", "Pushkardham", "B. T. Savani (Kidney) Hospital", "Saurashtra University"], 
+//#16
+
+["Saurashtra University", "B. T. Savani (Kidney) Hospital", "Shiv Shakti Colony", "Akashvani Chowk", "Jivan Jyot Chowk", "Ajit Bera , A/5, Janki Appartment, Panchayat Nagar Bus Stand", "Indira Circle", "Kotecha Chowk", "Swaminarayan Mandir", "Mahila College Chowk", "Astron Chowk", "Hemu Gadhvi Hall", "Ramkrushna Ashram", "Malaviya Chowk", "Trikon Baug", "S T Bus Stand", "Aryasamaj", "Kanta Stri Vikas Gruh", "Bhaktinagar Circle", "Sheth High School", "Kothariya Colony", "Sorathiyavadi Circle", "Jangleshwar Crossing / Bapunagar", "Satyam Park", "Aji G.I.D.C.", "Field Marshal Chowk", "Government Polytechnic", "Aji Dam", "Mansarovar Society", "Aarti Industrial Area", "Thebachda - Mahika Patiu", "Krishna International School", "Kalipat", "R.K. University", "Bharad Engineering College", "Tramba Village"], 
+//#17
+
+["Aji Dam", "Government Polytechnic", "Field Marshal Chowk", "Aji G.I.D.C.", "Satyam Park", "Jangleshwar Crossing / Bapunagar", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Aryasamaj", "S T Bus Stand", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Dharmendrasinhji College", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Swaminarayan Mandir", "Kotecha Chowk", "Wockhardt Hospital", "K K V Hall", "Atmiya College/Central School", "Crystal Mall", "Vrundavan Society", "A G Society", "Everest Park", "Mota Mauva", "Rangoli Park/Lakshmino Dholo", "Cosmoplex Cinema", "Kankot - Kalawad Road", "Vrukshmandir", "Uma P.T.C. College", "Haripar Village", "V.V.P. Engineering College", "Virda Vajadi Village", "Vagudad Village", "Vadvajadi Village", "G.I.D.C. Gate 1", "G.I.D.C. Gate 2", "G.I.D.C. Gate 3"], 
+//#18
+
+["Vavdee Village/school", "Vavdee Village/ward office", "Gautam budha nagar", "Punitnagar", "Punit Nagar BRTS", "Rajkamal Petrol Pump", "Gondal Chokdi", "P&T Colony/Gitanagar", "S.T.Workshop", "Panchsheel Society", "Shivnagar Doshi Hospital", "P.D.M. College", "Makkam Chowk", "Bombay Hotel", "ST Bus Stand", "Trikonbaug", "Jubilee Baug", "Hospital Chowk", "IP Mission", "Kothi compound", "Junction Railway Station", "Hansarajnagar", "Rafuji Colony/Shashtri Nagar", "Julelal Temple", "131 Slum Quater"], 
+//#19
+
+["Ghanteshvar S.R.P. Camp", "Astha Residency", "Ghanteshvar Village", "Ghanteshvar Park", "Sainik Society", "Shethnagar", "Madhapar Village", "Madhapar Chowk", "Vora Society", "Gayatridham", "Wankaner society", "Bajarangavadi", "Railway Colony", "Bhomeshvar", "Special School For Boys", "Ruda Office", "Hospital Chowk", "Jubilee Baug", "Trikonbaug", "ST Bus Stand", "Aryasamaj", "Kadvibai School", "Makkam Chowk", "P.D.M. College", "Shivnagar - Doshi Hospital", "Panchsheel Society", "S.T.Workshop", "P&T Colony/Gitanagar", "Gondal Chokdi", "AV. Jasani T.B. Hospital", "Kothariya Solvent", "Khokhaldad", "Astha Green City", "Pardi Village", "Shitalamajaji Temple", "Marutinagar (Sarvoday Housing Society)", "Shapar Veraval", "Veraval (Shapar) Bus Stand"], 
+//#20
+
+["Vidhyutnagar", "Rameshwari Chowk", "Santiniketan Park", "Shree Dharmeshwar Marg Chowk", "Nanavati Chowk", "Raiya Chowk", "Brahmasamaj Chowk", "Hanuman Madhi", "Sichay nagar-hanuman madhi", "Sankalp Siddh Park", "Geet gunjari crosing", "Police Head Quarter", "Bahumalibhavan", "Shardabag", "Chodhari high shcool", "Jubilee Baug", "Trikonbaug", "Jubilee Baug", "Hospital Chowk", "IP Mission", "Parevadi Chowk", "Patel Vadi", "Champak nagar - Panino Ghodo", "Narayan nagar aproch road govind nagar", "Aryanagar Pedak road", "Satellite Chowk - Marutinagar aproach Road", "Gramudhyog Mandir Pedak", "Lakheshwar Society - R.T.O. Office", "Bhagirath Society - Marketing Yard", "Marketing Yard"], 
+//#21
+
+["H & N Shukla College", "JK Park", "Gajanand Chowk", "Amrut Park Main Road", "Kailashdhara Park", "Vidhyutnagar", "Rameshwari Chowk", "Santiniketan Park", "Shree Dharmeshwar Marg Chowk", "Nanavati Chowk", "Raiya Chowk", "Brahmasamaj Chowk", "Hanuman Madhi", "Alkapuri", "Azad Chowk", "Amrapali Fatak", "Kisanpara Chowk", "Jilla Panchayat Chowk", "Fullchhab Chowk", "Chitralekha Chowk", "Limda Chowk", "Trikonbaug", "Jubilee Baug", "Hospital Chowk", "I P Mission", "Parevadi Chowk", "Patel Vadi", "Champak nagar - Panino Ghodo", "Narayan nagar aproch road govind nagar", "Aryanagar - Pedak road", "Satellite Chowk - Marutinagar aproach Road", "Gramudhyog Mandir Pedak", "Lakheshwar Society - R.T.O. Office", "Bhagirath Society - Marketing Yard", "Marketing Yard", "Pradhyuman Park", "H & N shukla College"], 
+//#22
+
+["Mavdi Village", "Akshar Complex", "Jai Sardar Chowk", "Shyamal City", "Gurudev Park 2", "Sanskar City", "Radha Krishna Chowk", "Sorathiya Parivar vadi", "Bapa Sitaram Chowk", "Mavdi Chowk", "Fuliya Hanuman Temple", "Mavdi Fire Station", "Mayani chowk", "Madhunagar/Rajnagar Society", "Suryamukhi Hanuman Chowk", "Chandreshvadi Chowk", "Gautam Nagar", "Amin Road Akshar Road Crossing", "Mahila College Chowk", "Kisanpara Chowk", "Jilla Panchayat Chowk", "Fullchhab Chowk", "Chitralekha Chowk", "Limda Chowk", "Trikonbaug", "Jubilee Baug", "Hospital Chowk", "IP Mission", "Parevadi Chowk", "Patel Vadi", "Jalaram Chowk-Santkabir Road Comer", "Sardar Vallabhbhai Vidhyalay", "Govind Baug", "Gadhiyanagar", "Dudheshvar Mahadev", "Marketing Yard", "Pradhyuman Park"], 
+//#23
+
+["G.I.D.C. Gate 3", "G.I.D.C. Gate 1", "Vadvajdi Village 2", "Vadvajdi Village", "Vagudad Village", "Virda Vajdi Village", "V.V.P. Engineering College", "Haripar Village", "Uma P.T.C. College", "Vruksh Mandir", "Kankot - Kalawad Road", "Cosmoplex Cinema", "Rangoli Park / Lakshmi No Dholo", "Mota Mauva", "Everest Park", "A.G. Society", "Vrundavan Society", "Crystal Mall", "Atmiya College / Central School", "K.K.V. Hall", "Wockhardt Hospital", "Kotecha Chowk", "Mahila College Chowk", "Kishanpara Chowk", "Jilla Panchayat Chowk", "Dharmendrasinhji College", "Jagnath Mandir", "Ramkrushna Ashram", "Malaviya Chowk", "Trikon Baug"], 
+//#24
+
+["131 Slum Quater", "Rafuji Colony/Shashtri Nagar", "Hansarajnagar", "Junction Railway Station", "Kothi Compound", "I P Mission", "Hospital Chowk", "Jubilee Baug", "Trikonbaug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Amin Road Akshar Road Crossing", "Amin Road Civic Center", "Hinglajnagar (Bharvad Chowk)", "Astron Society", "Suryamukhi Hanuman Chowk", "Grand Central Mall", "Nana Mava Chowk", "Satyasai Road Crossing", "Sastrinagar", "Alay Park", "Vrundavan Road Crossing", "Om Residency (Govani Hostel)", "Govani Hostel", "Ambika Township", "Jivraj Park"], 
+//#25
+
+["Vavdee Village/school", "Vavdee Village/ ward office", "Gautam budha nagar", "Punitnagar", "Jograna Chowk", "Dr. Ambedakar Chok", "Gokul approch(Nirav Complex)", "Gokuldham", "Panchashil Soc. Approch Road", "Guruprasad Chowk", "Swaminarayan Chowk", "Ambaji Kadva Plot", "P.D.M. College", "Jasani School", "Gopalnagar Choro", "Gurukul", "Kadvibai School", "Aryasamaj", "ST Bus Stand", "Trikonbaug", "Jubilee Baug", "Hospital Chowk", "IP Mission", "Kothi compound", "Junction Railway Station", "Junction Railway police station", "Popatpara Central Jail", "53 Quater/Popat para", "Ghanshyam Residency", "Amrut Residency - 2", "Santoshinagar"], 
+//#26
+
+["Trikonbaug", "Limda Chowk", "Chitralekha Chowk", "Fullchhab Chowk", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Amrapali Fatak", "Azad Chowk", "Alkapuri", "Hanuman Madhi", "Brahmasamaj Chowk", "Raiya Chowk", "Nanavati Chowk", "Ramdevpir Chowk", "Svapnalok Resi.", "Shree Ranima rudima chok", "Shantinagar", "Raiyadhar Slum Quarter"], 
+//#27
+
+["Gujarat Housing Board Quarter/Sagar Chok", "Insurance (vima) Hospital", "Rajkot Dairy", "Chunaravad Chowk", "Ramnath Para (B-Division Police Station)", "Jilla Garden Chowk", "Gundawadi Police Chowki", "ST Bus Stand", "Trikonbaug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Mahila College Chowk", "Swaminarayan Mandir", "Kotecha Chowk", "Wockhardt Hospital", "KKV Hall", "Atmiya College/Central School", "Swati Soc.", "Satysai Hospital", "Alap Heritage", "Phulvadi Park", "Satysai Road Crossing", "Sastrinagar", "Alay Park", "Vrundavan Road Crossing", "Om Residency (Govani Hostel)", "Govani Hostel", "Ambika Township", "Jivraj Park"], 
+//#28
+
+["-"], 
+//#29
+
+["Trikon Baug", "S.T. Bus Stand", "Aaryasamaj", "Kanta Stri Vikash Gruh", "Bhaktinagar Circle", "Jalaram Chowk", "Jivraj Hospital", "Trishul Chowk", "Babariya Colony", "Aahir Chowk", "Shyam Hall", "Patel Chowk", "New Subhashnagar", "Ghanshyam Nagar/Nanda Hall", "Raghuvansi Society", "Pipaliya Hall/Bhakti Hall", "Valkeshwar", "Jaljit Hall", "Sheth High School"], 
+//#30
+
+["Trikon Baug", "S.T. Bus Stand", "Kanta Stri Vikas Gruh", "Bhaktinagar Circle", "Sheth High School", "Jaljit Hall", "Valkeshwar Society", "Pipaliya Hall/Bhakti Hall", "Sahakar Society", "Ghanshyam Nagar/Nanda Hall", "New Subhashnagar", "Patel Chowk", "Shyam Hall", "Any Chowk", "Babariya Colony", "Pipaliya Hall/Bhakti Hall", "Trishul Chowk", "Jivraj Hospital", "Jalaram Chowk (Gayatrinagar Road)", "Bhaktinagar Circle", "Kadvibai School", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug"], 
+//#31
+
+["Tramba Village", "Bharad Engineering College", "R.K. University", "Kalipat", "Krishna International School", "Thebachda - Mahika Patiyu", "Aarti Industrial Area", "Mansarovar Society", "Aji Dam", "Government Polytechnic", "Field Marshal Chowk", "Aji G.I.D.C.", "Satyam Park", "Jangleshwar Crossing/Bapunagar", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "Ruda Office", "Special School For Boys", "Parsananagar (Ayapapaa Mandir)", "Parsana Nagar"], 
+//#32
+
+["Ashapura Mandir", "Mahika Patiyu", "Thebachda - Mahika Patiyu", "Aarti Industrial Area", "Mansarovar Society", "Aji Dam Chowkdi", "Government Polytechnic", "Field Marshal Chowk", "Aji G.I.D.C.", "Satyam Park", "Jangleshwar Crossing/Bapunagar", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "Ruda Office", "Special School For Boys", "Parsananagar (Ayapapaa Mandir)", "Parsana Nagar Main Road", "Parsana Nagar"], 
+//#33
+
+["Marketing Yard", "Dudheshwar Mahadev", "Gadhiya Nagar", "Govind Baug", "Sardar Vallabhbhai Vidyalay", "Jalaram Chowk", "Patel Vadi", "Parevadi Chowk", "I.P. Mission School", "Hospital Chowk", "Jubilee Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Dharmendrasinhji College", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Swaminarayan Mandir", "Kotecha Chowk", "Indira Circle", "Ajit Bera, A/5, Janki Apartment, Panchayat Nagar Bus Stand", "Jivan Jyot Chowk", "Akashvani Chowk", "Pushkardham", "Vimal Nagar", "A.G. Staff Quarter", "Prasheel Park", "Saurashtra University", "Shree City", "Munjaka Gam", "Christ College"], 
+//#34
+
+["Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kadvibai School", "Gurukul", "Gopalnagar Choro", "Jasani School", "P.D.M. College", "Shivnagar - Doshi Hospital", "Panchsheel Society", "S.T. Workshop", "P&T Colony/Gitanagar", "Rajkamal Petrol Pump", "Gondal Chowkdi", "Kothariya Solvent", "A.V. Jasani T.B. Hospital", "Khokhaldad", "Astha Green City", "Pardi Village", "Shitalamataji Temple", "Marutinagar (Sarvoday Housing Society)", "Shapar Veraval", "Veraval (Shapar) Bus Stand"], 
+//#35
+
+["Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "Ruda Office", "Special School For Boys", "Bhomeshvar", "Railway Colony", "Bajrangvadi Circle", "Wankaner Society Corner", "Wankaner Society", "Gayatridham", "Vora Society", "Madhapar Chowk", "Madhapar Village", "Shethnagar", "Sainik Society", "Nageshwar Jain Derasar", "Unicare Hospital", "Ghanteshvar Park", "Ghanteshvar Village", "Ghanteshwar S.R.P. Camp Road Crossing", "Parapipaliya Village", "Ekta Society", "Nyara Village Chowkdi"], 
+//#36
+
+["Vinod Nagar", "Santoshinagar Railway Crossing", "Satya Prakash School", "Pardi Road Crossing", "New Lalbahadur Society (Pardi Chowk)", "Lalpark Chowk", "Ahir Chowk", "Babariya Colony", "Pipaliya Hall/Bhakti Hall", "Trishul Chowk", "Jasani School", "Gopalnagar Choro", "Gurukul", "Kadvibai School", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "I.P. Mission", "Kothi Compound", "Junction Railway Station", "Popatpara Central Jail", "Popatpara", "Central Warehouse", "Railnagar", "Santoshinagar", "Lokmany Tilak/Subhas Chandra Bose Avas", "Virsavarkar Avas (Bharat Petrol Pump)", "Maharshi Arvind Avas", "Chatrapati Shivaji Township"], 
+//#37
+
+["Aji Dam", "Government Polytechnic", "Field Marshal Chowk", "Aji G.I.D.C.", "Satyam Park", "Jangleshwar Crossing/Bapunagar", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "Ruda Office", "Special School For Boys", "Bhomeshvar", "Railway Colony", "Bajrangavadi", "Bajrangvadi Circle", "Wankaner Society Corner", "Wankaner Society", "Gayatridham", "Vora Society", "Madhapar Chowk", "Madhapar Bus Stand (GSRTC)"], 
+//#38
+
+["-"], 
+//#39
+
+["Saurashtra University Bus Stop", "Saurashtra University", "Saurashtra University Gate", "B. T. Savani (Kidney) Hospital", "Shiv Shakti Colony", "Akashvani Chowk", "Jivan Jyot Chowk", "Ajit Bera, A/5, Janki Apartment, Panchayat Nagar Bus Stand", "Indira Circle", "SBI Bank Chowk", "Kotecha Chowk", "Swaminarayan Mandir", "Kisanpara Chowk", "Jilla Panchayat Chowk", "Bahumalibhavan", "Shardabag", "G.T. Sheth Hospital/Collector Office", "Jamtower Chowk", "Gebanshah Pir Dargah", "Junction Railway Station", "Junction Railway Police Station", "Popatpara Central Jail", "Popatpara", "Central Warehouse", "Astha Resi/Sadhuvasvani Kunj Road", "Railnagar", "Radhe Park", "Santoshinagar"], 
+//#40
+
+["Vinod Nagar", "Satya Prakash School", "New Lalbahadur Society (Pardi Chowk)", "Lalpark Chowk", "Ahir Chowk", "Babariya Colony", "Pipaliya Hall/Bhakti Hall", "Trishul Chowk", "Jivraj Hospital", "Jalaram Chowk (Gayatrinagar Road)", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Mahila College Chowk", "Swaminarayan Mandir", "Kotecha Chowk", "SBI Bank Chowk", "Jalaram Plot", "Africa Colony", "Raiya Telephone Exchange", "Golden Park", "Tulsi Baag", "Jay Gopal Chowk", "Balaji Park/Satellite Park", "Patidar Chowk", "Radhe Park/Gangotri Park"], 
+//#41
+
+["Greenland Chowkdi Pickup Stand (GSRTC)", "Greenland Chowkdi", "Marutinagar 50 Feet Road Chowk", "Gurudev Park", "Ranchhoddas Ashram", "Parevadi Chowk", "I.P. Mission", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Dharmendrasinhji College", "Jagnath Mandir", "Jilla Panchayat Chowk", "Kisanpara Chowk", "Mahila College Chowk", "Kotecha Chowk", "Wockhardt Hospital", "K.K.V. Hall", "Atmiya College/Central School", "Crystal Mall", "Vrundavan Society", "Rajkot Mahanagar Palika Aavas", "Vrundavan Road Crossing", "Bheemarav Nagar/Om Residency", "Govani Hostel", "Ambika Township", "Jivraj Park", "Mota Mava"], 
+//#42
+
+["Om Residency", "Bhagavatipara (Jay Prakashnagar)", "Jay Prakashnagar Society", "Bhagavatipara Police Choki", "Mahakali Society", "Bhagavatipara Sheri No. 9", "Trikon Baug", "S.T. Bus Stand", "Bombay Hotel", "Bhaktinagar Station", "Makkam Chowk", "Svashray Society", "Aanand Bunglows", "Ashok Garden", "Pandit Dindayal", "Rajnagar Main Road Crossing", "Chandranagar Shakmarket", "Vishvanagar", "Sanidhya Bunglows", "Mahapuja Dham", "Omnagar", "Shree Sahjanand Dham", "Yadunandan Chowk", "New Rajdeep Society", "Akshar Vatika (Mavdi)"], 
+//#43
+
+["Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kanta Stri Vikas Gruh", "Bhaktinagar Circle", "Sheth High School", "Kothariya Colony", "Sorathiyavadi Circle", "Jangleshwar Crossing/Bapunagar", "Satyam Park", "Aji G.I.D.C.", "Field Marshal Chowk", "Government Polytechnic", "Aji Dam", "Mansarovar Society", "Aarti Industrial Area", "Thebachda - Mahika Patiyu", "Krishna International School", "Kalipat", "R.K. University", "Bharad Engineering College", "Tramba Village"], 
+//#44
+
+["Saurashtra University Bus Stop", "Saurashtra University", "Saurashtra University Gate", "B. T. Savani (Kidney) Hospital", "Shiv Shakti Colony", "Akashvani Chowk", "Jivan Jyot Chowk", "Ajit Bera, A/5, Janki Apartment, Panchayat Nagar Bus Stand", "Indira Circle", "SBI Bank Chowk", "Kotecha Chowk", "Swaminarayan Mandir", "Mahila College Chowk", "Astron Chowk", "Hemu Gadhvi Hall", "Ramkrushna Ashram", "Malaviya Chowk", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "I.P. Mission", "Parevadi Chowk", "Ranchhoddas Ashram", "Gurudev Park", "Shree Ram Park - Kuvadva", "Greenland Chowkdi", "Shiv Jhara Residency", "Jai Jawan Jai Kisan Society", "Indraprasth Society", "Velnathpara Beginning (Nr. School No. 71)", "Velnathpara (Street No. 17)", "150 Feet Ring Road - Morbi Road Crossing", "Bedi", "Marwadi College", "I.O.C.", "Gauridad", "Ratanpar Telephone Exchange", "Ratanpar Village", "Ratanpar (Ramji Mandir)"], 
+//#45
+
+["Arpit Eng. College (Hadala Gam)", "Darshan Eng. College", "Ratanpar (Ramji Mandir)", "Ratanpar Gam", "Ratanpar Telephone Exchange", "Gauridad", "I.O.C.", "Marwadi College", "Bedi Marketing Yard", "150 Feet Jamnagar Road Crossing", "Velnathpara (Sheri No. 17)", "Velnathpara Saruaat (Shala No. 71 Paase)", "Indraprasth Society", "Jai Jawan Jai Kisan Society", "Shivdhara Residency", "Greenland Chowkdi", "Marutinagar 50 Feet Road Chowk", "Ranchhod Aashram", "Parevadi Chowk", "Hospital Chowk", "Jubilee Baug", "Trikon Baug"], 
+//#46
+
+["Kothariya Village", "Kothariya Housing", "Ranuja Temple", "Gokul Park", "Kothariya Chowk", "Hudco Police Chowki", "Govind Nagar", "Ghanshyam Nagar/Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Makkam Chowk", "Bhaktinagar Station", "Hemu Gadhvi Hall", "Astron Chowk", "LIC Office", "Swaminarayan Mandir", "Kotecha Chowk", "SBI Bank Chowk", "Indira Circle", "Ajit Bera, A/5, Janki Apartment, Panchayat Nagar Bus Stand", "Jivan Jyot Chowk", "Akashvani Chowk", "Shiv Shakti Colony", "B. T. Savani (Kidney) Hospital", "Saurashtra University Gate", "Saurashtra University", "Saurashtra University Bus Stop"], 
+//#47
+
+["-"], 
+//#48
+
+["-"], 
+//#49
+
+["-"], 
+//#50
+
+["Ghanteshvar S.R.P. Camp", "Astha Residency", "Ghanteshvar Village", "Ghanteshvar Park", "Sainik Society", "Shethnagar", "Madhapar Village", "Madhapar Chowk", "Vora Society", "Gayatridham", "Wankaner Society", "Bajarangavadi", "Railway Colony", "Bhomeshvar", "Jagruti Shramjivi Society", "Bhomeshvar", "Special School For Boys", "Ruda Office", "Hospital Chowk", "Jubilee Baug", "Trikon Baug", "S.T. Bus Stand", "Arya Samaj", "Kadvibai School", "Makkam Chowk", "Anand Bunglow Chowk", "Sarojeeni Nayadu School (Ambaji Kadva Plot)", "Swaminarayan Chowk", "Guruprasad Chowk", "Panchsheel Soc. Approach Road", "Gokuldham", "Gokul Approach(Nirav Complex)", "Dr. Ambedkar Chowk", "Jograna Chowk", "Punit Nagar"], 
+//#51
+
+["-"], 
+//#52
+
+["-"], 
+//#53
+
+["Kothariya Chowk", "Hudco Police Chowki", "Ghanshyam Nagar/Nanda Hall", "Devpara", "Nilkanth Cinema", "50 Feet Road Crossing", "Sorathiyavadi Circle", "Kothariya Colony", "Sheth High School", "Bhaktinagar Circle", "Kanta Stri Vikas Gruh", "Arya Samaj", "S.T. Bus Stand", "Trikon Baug", "Jubilee Baug", "Hospital Chowk", "Ruda Office", "Special School For Boys", "Bhomeshvar", "Jagruti Shramjivi Society", "Bhomeshvar", "Railway Colony", "Bajarangavadi", "Bajrangvadi Circle", "Wankaner Society Corner", "Wankaner Society", "Gayatridham", "Vora Society", "Madhapar Chowk", "Madhapar Village", "Shethnagar", "Sainik Society", "Ghanteshvar Park", "Ghanteshvar Village", "Astha Residency", "Ghanteshvar S.R.P. Camp"] 
+//#54
+
+["-"], 
+//#55
+
+["Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Mahila College Chowk", "Swaminarayan Mandir", "Kotecha Chowk (22.290491,70.7784)", "Wockhardt Hospital", "K.K.V. Hall", "Atmiya College/Central School", "Crystal Mall", "Vrundavan Society", "A.G. Society", "Everest Park", "Mota Mauva", "Rangoli Park/Lakshmino Dholo", "Sunshine Group of Institute", "Labhubhai Engineering College", "Government Engineering College"], 
+//#56
+
+["Trikon Baug", "Malaviya Chowk", "Ramkrushna Ashram", "Hemu Gadhvi Hall", "Astron Chowk", "Swaminarayan Mandir / Mahila College Chowk", "Indubai Mahasatiji Chowk", "K.K.V. Hall", "Atmiya College / Central School", "Crystal Mall", "A.G. Society", "Everest Park", "Mota Mauva", "Cosmoplex Cinema", "Kankot Patiya", "Labhubhai Engineering College", "Government Engineering College"] 
+//#57
+];
+
+
+
+        let upordown = 0;
+        // Display routes dynamically in the route container
+   const routeList = document.getElementById('routeList');
+        routes.forEach((route, index) => { 
+                const routeBox = document.createElement('div');
+                routeBox.className = 'route-box';
+                routeBox.innerHTML = `${index + 1}. ${route[0]} to ${route[1]}`;
+                routeBox.addEventListener('click', () => openTrackingWindow(route[0], route[1], index + 1));
+                routeList.appendChild(routeBox);
+                if(route[0] === "-") routeBox.style.display = "None";
+            
+        });
+
+        document.getElementById("swap").addEventListener("click", () => { 
+            
+            let soc = document.getElementById("source").value;
+            let des = document.getElementById("destination").value;
+            document.getElementById("source").value = des;
+            document.getElementById("destination").value = soc;
+            if(upordown == 0) {
+                upordown = 1;
+            } else {
+                upordown = 0;
+            } 
+        });
+
+
+        function openTrackingWindow(source, destination, busNumber) {
+            console.log(source)
+            document.getElementById('source').value = source;
+            document.getElementById('destination').value = destination;
+            document.getElementById('busCircle').innerText = busNumber;
+            document.getElementById('trackingContainer').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+
+            document.getElementById('trackBus').addEventListener('click', () => { 
+                window.location.href = `tracking.html?bus=${busNumber}&t=1`;
+            });
+        }
+ 
+    document.getElementById('closeButton').addEventListener('click', () => {
+        document.getElementById('trackingContainer').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    });
+
+    document.getElementById('backButton').addEventListener('click', () => { 
+        // Optionally navigate to a previous page if needed
+        window.history.back();
+    }); 
+
+    let searchButton = document.getElementById('searchInput')
+    
+    /*
+// Add event listener for button click
+function searchEventByBus() {
+    const searchText = searchInput.value.trim().toLowerCase(); // Normalize input value to lowercase
+    const routeBoxes = document.getElementsByClassName('route-box');
+    
+    for (let i = 0; i < routeBoxes.length; i++) { 
+        const routeBox = routeBoxes[i];
+        let index = routeBox.innerHTML.split(".")[0];
+        const startRoute = routes[index - 1][0].toLowerCase().trim(); // Normalize route names
+        const endRoute = routes[index - 1][1].toLowerCase().trim();
+
+        // Log for debugging
+        console.log(`${index} ${startRoute} to ${endRoute} != ${searchText} = ${startRoute !== searchText} && ${endRoute !== searchText}`);
+        
+        // Compare normalized values
+        if (startRoute !== searchText.toLowerCase() && endRoute !== searchText.toLowerCase()) {
+            routeBox.style.display = "none"; // Hide unmatched route
+        } else {
+            routeBox.style.display = "block"; // Show matched route
+        }
+    }
+}
+*/
+
+let maploaded = 0;
+
+           fetch('/quickstore')
+                .then(data => { 
+            if(busloaded == 0) {
+            console.log('Received data: ', data);
+            let bus = data;
+            searchEvent(searchText);
+                document.getElementById("searchInput").value = bus;
+                busloaded = 1;
+            }
+        });
+
+function searchEvent(searchText) {
+    if(!searchText) searchText = searchInput.value.trim().toLowerCase(); // Normalize input
+    const routeBoxes = document.getElementsByClassName('route-box');
+
+    for (let i = 0; i < pickup_points.length; i++) {
+        let displayCon = false;
+
+        // Check all pickup points for the current route
+        for (let j = 0; j < pickup_points[i].length; j++) {
+            if (pickup_points[i][j].toLowerCase().trim() === searchText) {
+                displayCon = true;
+                break; // Exit loop if a match is found
+            }
+        }
+
+        // Display logic based on conditions
+        if (displayCon) {
+            routeBoxes[i].style.display = "block"; // Show matched route
+        } else {
+            routeBoxes[i].style.display = "none"; // Hide unmatched route
+        }
+
+        console.log(`Route ${i + 1}: ${displayCon ? "Matched" : "Not Matched"}`);
+    }
+}
+
+
+    </script>
+</body>
+</html>

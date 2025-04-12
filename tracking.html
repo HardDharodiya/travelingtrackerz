@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Tracking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <title>Travelling Trackerz</title>
+    <style>
+        @font-face {
+            font-family: "Android Assassin";
+            src: url("/assets/AndroidAssassin-WXXY.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(180deg, #0d47a1, #1565c0);
+            color: #4fbd00;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            overflow-y: scroll;
+            /* display: flex;
+            justify-content: center;
+            align-items: flex-end; */
+            /* Hide scrollbar for Chrome, Edge, and Safari */
+        }
+
+        html,
+        body {
+            height: 100%;
+            overflow: hidden;
+            /* Prevent automatic scrollbar generation */
+        }
+
+        /* Hide scrollbar for Chrome, Edge, and Safari */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge, and Firefox */
+        body {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+
+
+        .tracking-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+        }
+
+        .tracking-container h2 {
+            font-size: 26px;
+            margin: 10px 0;
+        }
+
+        .bus-circle {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: #1e88e5;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 4px solid #ffffff;
+        }
+
+        .search-container input {
+            width: 80%;
+            max-width: 300px;
+            padding: 10px 15px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .track-btn {
+            margin-top: 20px;
+            padding: 12px 40px;
+            font-size: 18px;
+            background: #ffffff;
+            color: #0d47a1;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+
+        /* Result Panel */
+        .result-page {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .result-page2 {
+            position: absolute;
+            bottom: 20px;
+            align-items: center;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .result-item {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border-radius: 10px;
+            border-color: black;
+            border-width: 10px;
+            top: 120px;
+            right: 30px;
+            position: fixed;
+            padding: 10px 15px;
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .icon-container {
+            background-color: #6a1b9a;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+
+
+
+
+        .arrow-container {
+            background-color: #283593;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .result-item span {
+            flex: 1;
+            margin: 0 10px;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #swap {
+            background-color: #0e30dc;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Google Map */
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        /* Map container with blur effect */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            /* Adjust to your needs */
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .map-container1 {
+                display: none;
+                position: relative;
+                top: 110px;
+                width: 100%;
+                height: 500px;
+                /* Adjust to your needs */
+                overflow: hidden;
+            }
+
+            .result-page {
+
+                position: fixed;
+                align-items: center;
+
+                z-index: 100;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .result-page2 {
+
+                position: fixed;
+                align-items: center;
+
+                z-index: 100;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .back-btn {
+                position: absolute;
+                top: 90px;
+                left: 10px;
+                background: #1e88e5;
+                color: #ffffff;
+                border: none;
+                border-radius: 8px;
+                padding: 5px 15px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            }
+
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+            margin-top: 20px;
+            border: none;
+            box-shadow: 0 3px 5px 3px hsla(0, 0%, 53%, .35);
+            display: none;
+            border-radius: 5px;
+            /* Hide by default */
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 100px;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Semi-transparent black background */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            z-index: 1;
+            /* Make sure it's on top */
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+            /* Hide the overlay when map is ready */
+        }
+
+        /* loader */
+
+        .loader {
+            bottom: 0;
+            left: 0;
+            overflow: hidden;
+            display: none;
+            position: fixed;
+            right: 0;
+            top: 0;
+            z-index: 10;
+        }
+
+        .loader-inner {
+            bottom: 0;
+            height: 60px;
+            left: 0;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100px;
+        }
+
+        .loader-line-wrap {
+            animation:
+                spin 2000ms cubic-bezier(.175, .885, .32, 1.275) infinite;
+            box-sizing: border-box;
+            height: 50px;
+            left: 0;
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            transform-origin: 50% 100%;
+            width: 100px;
+        }
+
+        .loader-line {
+            border: 4px solid transparent;
+            border-radius: 100%;
+            box-sizing: border-box;
+            height: 100px;
+            left: 0;
+            margin: 0 auto;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100px;
+        }
+
+        .loader-line-wrap:nth-child(1) {
+            animation-delay: -50ms;
+        }
+
+        .loader-line-wrap:nth-child(2) {
+            animation-delay: -100ms;
+        }
+
+        .loader-line-wrap:nth-child(3) {
+            animation-delay: -150ms;
+        }
+
+        .loader-line-wrap:nth-child(4) {
+            animation-delay: -200ms;
+        }
+
+        .loader-line-wrap:nth-child(5) {
+            animation-delay: -250ms;
+        }
+
+        .loader-line-wrap:nth-child(1) .loader-line {
+            border-color: hsl(240, 80%, 60%);
+            height: 90px;
+            width: 90px;
+            top: 7px;
+            animation: colorChange2 linear 2.1s infinite;
+        }
+
+        .loader-line-wrap:nth-child(2) .loader-line {
+            border-color: hsl(180, 80%, 60%);
+            height: 76px;
+            width: 76px;
+            top: 14px;
+            animation: colorChange linear 2.2s infinite;
+        }
+
+        .loader-line-wrap:nth-child(3) .loader-line {
+            border-color: hsl(240, 80%, 60%);
+            height: 62px;
+            width: 62px;
+            top: 21px;
+            animation: colorChange2 linear 2.3s infinite;
+        }
+
+        .loader-line-wrap:nth-child(4) .loader-line {
+            border-color: hsl(180, 80%, 60%);
+            height: 48px;
+            width: 48px;
+            top: 28px;
+            animation: colorChange linear 2.4s infinite;
+        }
+
+        .loader-line-wrap:nth-child(5) .loader-line {
+            border-color: hsl(240, 80%, 60%);
+            height: 34px;
+            width: 34px;
+            top: 35px;
+            animation: colorChange2 linear 2.5s infinite;
+        }
+
+        @keyframes colorChange {
+
+            0%,
+            100% {
+                border-color: hsl(240, 80%, 60%);
+            }
+
+            50% {
+                border-color: hsl(180, 80%, 60%);
+            }
+        }
+
+        @keyframes colorChange2 {
+
+            0%,
+            100% {
+                border-color: hsl(180, 80%, 60%);
+            }
+
+            50% {
+                border-color: hsl(240, 80%, 60%);
+            }
+        }
+
+        @keyframes spin {
+
+            0%,
+            15% {
+                transform: rotate(0);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Header Layout */
+        header {
+            background-color: #1a2a45;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            /* Distribute items */
+        }
+
+        header h1 {
+            font-family: "Android Assassin", sans-serif;
+            font-size: 36px;
+            color: #333;
+        }
+
+        header h1.title {
+            color: #f0f8ff;
+            font-size: 28px;
+            margin: 0;
+            text-align: center;
+            letter-spacing: 2px;
+            flex: 1;
+            /* Take remaining space for centering */
+        }
+
+        .title {
+            color: white;
+            font-size: 50px;
+            text-align: center;
+            letter-spacing: 0.4vw;
+        }
+
+        .title span {
+            display: inline-block;
+        }
+
+        .title .blue {
+            color: #007BFF;
+        }
+
+        .title .white {
+            color: white;
+        }
+
+        header .bus-icon,
+        header .user-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header .bus-icon img,
+        header .user-icon img {
+            width: 100%;
+            /* Fit icon inside circle */
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 100px;
+            left: 10px;
+            z-index: 1001;
+            background-color: #1a2a45;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-btn:hover {
+            background: #1565c0;
+            cursor: pointer;
+        }
+
+        /* Popup background overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup box styles */
+        .popup-box {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .popup-box h2 {
+            margin: 0 0 10px;
+            color: #ff0000;
+        }
+
+        .popup-box p {
+            margin: 0 0 20px;
+            color: #333;
+        }
+
+        /* Buttons */
+        .popup-box button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .popup-box button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            display: flex;
+            font-weight: bolder;
+            position: fixed;
+            bottom: 20px;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding-left: 30%;
+            padding-top: 20px;
+            z-index: 1000;
+        }
+
+        .box {
+            background-color: white;
+            width: 240px;
+            z-index: 10000;
+            height: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .box img {
+
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .box p {
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+        .bottom-left-box {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 90px;
+            height: 90px;
+            background-color: rgb(163, 222, 242);
+            border: 2px solid blue;
+            color: darkblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            z-index: 15;
+        }
+        @media (max-width: 600px) {
+            .box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="bus-icon">
+            <img src="https://i.imgur.com/EWe8j42.png" alt="Bus Icon">
+        </div>
+        <h1 class="title">
+            <span class="blue" style="font-family: 'Android Assassin';">Travel</span><span class="white">ling</span>
+            <span class="blue" style="font-family: 'Android Assassin';">Track</span><span class="white">erz</span>
+        </h1>
+        <div class="user-icon">
+            <img src="https://i.imgur.com/W5VNfWF.png" alt="User Icon">
+        </div>
+    </header>
+    <!-- Box for displaying distance time -->
+    <div class="bottom-left-box">
+        <p id="distance_speed">⌚</p>
+    </div>
+    <!-- Popup structure -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-box">
+            <h2 id="alert_box">No Seats left!</h2>
+            <p id="break_warning_pop"></p>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+    <button class="back-btn" id="backButton">&larr; Back</button>
+    <div class="tracking-container">
+        <h2>Track Your Bus</h2>
+        <div class="bus-circle" id="busNumber"></div>
+        <div class="search-container">
+            <input type="text" id="source" style="text-align: center;" placeholder="Source..." readonly>
+
+            <button title="swap" id="swap"><i class="fas fa-exchange-alt"></i> </button>
+            <input type="text" id="destination" style="text-align: center;" placeholder="Destination..." readonly>
+        </div>
+        <button class="track-btn" id="trackBus">Track</button>
+    </div>
+
+    <div class="result-page">
+        <!-- Result info (Bus Number and Route) -->
+        <div class="result-item">
+            <div class="icon-container">
+                <i class="fas fa-bus"></i>
+            </div>
+            <span id="bus-no-icon">R</span>
+            <div class="arrow-container">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <div class="arrow-container">
+                <i class="fas fa-arrow-down"></i>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    <div class="container">
+        <div class="box" id="busStatus">
+            <!-- <img src="path-to-image.jpg" alt="Image Description"> -->
+            <p>Break Down</p>
+        </div>
+        <div class="box" id="passengersCount">
+            <!-- <img src="path-to-image.jpg" alt="Image Description"> -->
+            <p>Seat Vacancy</p>
+        </div>
+    </div>
+    <div class="map-container">
+        <!-- Loading overlay -->
+        <div class="loader">
+            <div class="loader-inner">
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+                <div class="loader-line-wrap">
+                    <div class="loader-line"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loading-overlay" id="loadingOverlay">Tracking the bus...</div>
+
+
+
+        <iframe id="map" class="map-container1" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+ 
+    <script> // Initialize Socket.io
+ 
+        // Predefined list of bus routes
+        let upordown = 0;
+        let t = 0;
+        let closev = 0;
+        const routes = [
+            ["Saurashtra University", "Trikon Baug"],
+            ["Pradyuman Park", "Raiya Gaam"],
+            ["Jivraj Park", "Madhapar Chokadi"],
+            ["Aajidam ", "G.I.D.C. Gate 3"],
+            ["Raiya Gaam", "Tramba"],
+            ["Santoshinagar", "Tramba Gam"],
+            ["Bajrangvadi Circle", "Bhakatinagar Circle"],
+            ["Greenland Chokadi", "Labhubhai Engineering College"],
+            ["Arpit Eng. College (Hadala Gam)", "Saurashtra University"],
+            ["-", "-"],
+            ["Shapar Veraval", "Trikon Baug"],
+            ["-", "-"],
+            ["Kothariya Chokadi", "Lal bahadur shastriavas"],
+            ["Kothariya Gam", "Navagam"],
+            ["G.I.D.C. Gate 3", "Kothariya Gam"],
+            ["Kothariyagam", "Saurashtra University"],
+            ["Saurashtrar University", "Tramba Gam"],
+            ["Aajidam ", "G.I.D.C. Gate 3"],
+            ["131 Slam Quarter", "Vavdi Gam"],
+            ["Ghanteshvar S.R.P. Camp", "Shapar Veraval"],
+            ["Marketing Yard", "Shantiniketan aveue (Raiya Gam)"],
+            ["-", "-"],
+            ["Mavdi Gam", "Pradyuman Park"],
+            ["G.I.D.C. Gate 3", "Trikon Baug"],
+            ["131 Slam Quarter", "Jivraj Park"],
+            ["Santoshinagar", "Vavdi Gam"],
+            ["Raiyadhar Salam Quarter", "Trikon Baug"],
+            ["Gujarat Housing Quarter", "Jivraj Park"],
+            ["-", "-"],
+            ["Trikon Baug circular", "Trikon Baug"],
+            ["-", "-"],
+            ["Parsananagar", "Tramba Gam"],
+            ["Ashapura Mandir", "Parsananagar"],
+            ["Marketing Yard", "Munjka Gam"],
+            ["Shapar Veraval", "Trikon Baug"],
+            ["Bhakatinagar Circle", "Nyaragam Chokadi"],
+            ["Chhatrapati Shivaji Township", "Vinodnagar"],
+            ["Aajidam ", "Madhapar Gam"],
+            ["-", "-"],
+            ["Santoshinagar", "Saurashtra University"],
+            ["Gangotri Park", "Vinodnagar"],
+            ["Greenland Chokadi", "Jivraj Park"],
+            ["Akshar Vatika", "Om Resi."],
+            ["Tramba Gam", "Trikon Baug"],
+            ["Ratanpar", "Saurashtra University"],
+            ["Arpit Eng. College (Hadala Gam)", "Trikon Baug"],
+            ["Kothariyagam", "Saurashtra University"],
+            ["-", "-"],
+            ["-", "-"],
+            ["-", "-"],
+            ["Punit Nagar", "S.R.P. Camp"],
+            ["-", "-"],
+            ["-", "-"],
+            ["Kothariya Chokadi", "Ghanteshvar S.R.P. Camp"],
+            ["Gondal Chokadi", "Ratanpar"],
+            ["-", "-"],
+            ["Government Eng. College", "Trikon Baug"],
+        ];
+
+        let user_lat = 0;
+        let user_long = 0;
+
+        // Destination Coordinates (for example: Delhi, India)
+        let destination = {
+            lat: 0,
+            lon: 0
+        };
+        let time_dist = 0;
+        function getLocation() { 
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        let latitude = position.coords.latitude;
+                        let longitude = position.coords.longitude;
+
+                        user_lat = latitude;
+                        user_long = longitude;
+
+                        let distance = haversine(latitude, longitude, destination.lat, destination.lon);
+                         console.log(distance)
+                        let speed = 20; // Fixed speed in km/h
+                        let time = distance / speed; // Time in hours
+                        let timeInMinutes = (time * 60).toFixed(0);
+
+                        time_dist = String(timeInMinutes)+"min";
+                        document.getElementById("distance_speed").innerHTML = time_dist;
+                    },
+                    (error) => {
+                        switch (error.code) {
+                            case error.PERMISSION_DENIED:
+                                console.log("User denied the request for Geolocation.");
+                                break;
+                            case error.POSITION_UNAVAILABLE:
+                                console.log("Location information is unavailable.");
+                                break;
+                            case error.TIMEOUT:
+                                console.log("The request to get user location timed out.");
+                                break;
+                            case error.UNKNOWN_ERROR:
+                                console.log("An unknown error occurred.");
+                                break;
+                        }
+                    }
+                );
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+                document.getElementById("distance_speed").innerHTML = "ERROR";
+            }
+        }
+
+        // Haversine Formula to Calculate Distance Between Two Points
+        function haversine(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in km
+            const toRad = deg => deg * (Math.PI / 180);
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            const distance = R * c; // Distance in km
+            console.log(`Calculated Haversine Distance: ${distance.toFixed(2)} km`);
+            return distance;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        t = parseInt(urlParams.get('t'));
+        let ud = parseInt(urlParams.get('ud'));
+        if (ud == 1) upordown = 1;
+
+        let busId = parseInt(urlParams.get('bus')) - 1; 
+
+        if (busId >= 0 && busId < routes.length) {
+            const [source, destination] = routes[busId]; // Retrieve route from predefined list
+            document.getElementById("busNumber").textContent = `${busId + 1}`; // Display bus number (busId + 1)
+            document.getElementById("source").value = source;
+            document.getElementById("destination").value = destination;
+        } else {
+            alert("Invalid bus selected! Redirecting to the routes page...");
+            window.location.href = "route-selection.html"; // Redirect to routes page if invalid bus ID
+        }
+
+        document.getElementById("swap").addEventListener("click", () => {
+
+            let soc = document.getElementById("source").value;
+            let des = document.getElementById("destination").value;
+            document.getElementById("source").value = des;
+            document.getElementById("destination").value = soc;
+            if (upordown == 0) {
+                upordown = 1;
+            } else {
+                upordown = 0;
+            }
+        });
+        document.getElementById("trackBus").addEventListener("click", () => {
+
+            document.getElementsByClassName('tracking-container')[0].style.display = "none";
+            document.getElementsByClassName('loading-overlay')[0].style.display = "flex";
+            document.getElementsByClassName('result-item')[0].style.display = "flex";
+            let bus = document.getElementById('busNumber').innerHTML;
+
+            if (busId >= 0 && busId < routes.length) {
+                // alert(`Tracking Bus ${busId + 1} from ${document.getElementById("source").value} to ${document.getElementById("destination").value}`);
+
+                let bn = busId + 1;
+                document.getElementById('bus-no-icon').innerHTML = `R${bn}`;
+                document.getElementsByClassName('arrow-container')[parseInt(upordown)].style.display = "flex";
+                fetch(`/user?b=${bn}&r=${upordown}`);
+                // Add functionality to fetch live bus data for tracking 
+                document.getElementsByClassName('loader')[0].style.display = "flex";
+            }
+        });
+
+        if (t == 1) {
+
+            document.getElementsByClassName('tracking-container')[0].style.display = "none";
+            document.getElementsByClassName('loading-overlay')[0].style.display = "flex";
+            document.getElementsByClassName('result-item')[0].style.display = "flex";
+            TimeOutScreen();
+            if (busId >= 0 && busId < routes.length) {
+                // alert(`Tracking Bus ${busId + 1} from ${document.getElementById("source").value} to ${document.getElementById("destination").value}`);
+
+                let bn = busId + 1;
+                document.getElementById('bus-no-icon').innerHTML = `R${bn}`;
+                document.getElementsByClassName('arrow-container')[parseInt(upordown)].style.display = "flex";
+                fetch(`/user?b=${bn}&r=${upordown}`);
+                // Add functionality to fetch live bus data for tracking 
+                document.getElementsByClassName('loader')[0].style.display = "flex";
+            }
+        }
+
+        let maploaded = 0;
+
+        function TimeOutScreen() {
+        setTimeout(() => {
+            
+               document.getElementById('alert_box').innerHTML = "Alert: Bus Breakdown";
+               document.getElementById('break_warning_pop').innerHTML = "Some issue may occured in city bus, Try again!";
+               
+               document.getElementsByClassName('loader')[0].style.display = "none";
+               document.getElementsByClassName('loading-overlay')[0].style.display = "none";
+
+        
+            if(maploaded == 0) showPopup(1);
+               
+            
+            }, 20000); 
+        }
+
+        socket.on('locData', (data) => {
+            if (maploaded == 0) {
+                console.log('Received data: ', data);
+                let latitude = data.latitude;
+                let longtitude = data.longtitude;
+                destination.lat = latitude;
+                destination.lon = longtitude;
+                let state = data.stat;
+                let pscount = data.psc;
+                getLocation();
+                const breakdownBox = document.getElementById('busStatus');
+                const seatVacancyBox = document.getElementById('passengersCount');
+
+                // Extract relevant data from the socket input
+                const { stat, psc } = data;
+                const totalCount = 25; // Default total count is fixed at 10
+
+
+
+                // Update box colors and text based on the status
+                let breakdownStatus = "Running";
+                let seatStatus = "Vacant";
+
+
+                document.getElementsByClassName('loader')[0].style.display = "none";
+                document.getElementsByClassName('loading-overlay')[0].style.display = "none";
+                document.getElementsByClassName('map-container')[0].style.display = "block";
+
+                const mapUrl = `https://maps.google.com/maps?q=loc:${latitude},${longtitude}&z=15&output=embed`;
+                //https://www.google.com/maps/dir/Your+Location/21.190847788752734,81.28469514804962/
+                console.log(`mapUrl: ${mapUrl}`);
+                const mapIframe = document.getElementById('map');
+                const passengersCount = document.getElementById('passengersCount');
+                const busStatus = document.getElementById('busStatus');
+                let decision = "Vacant";
+                //GREEN = vacant
+                if (psc >= totalCount) decision = "Full";
+                //RED = FULL
+                let bs = "Running";
+                let bsString = `Bus Status: ${bs}`;
+                if (stat == 1) {
+                    bs = "Breakdown";
+                    showPopup(0);
+                    //red
+                    breakdownBox.style.Color = "#FF0000";
+                    breakdownStatus = "Breakdown";
+                }
+                else if (stat == 2) {
+                    bs = "Traffic";
+                    //yellow
+                    breakdownBox.style.Color = "#FFFF00";
+                    breakdownStatus = "Traffic";
+                } else {
+                    //green
+                    breakdownBox.style.Color = "#00851b";
+                }
+
+
+                let psString = `${decision} (${psc}/${totalCount})`;
+
+                breakdownBox.querySelector('p').textContent = breakdownStatus;
+
+                // Seat Vacancy (psc)
+                if (psc >= totalCount) {
+                    seatVacancyBox.style.Color = "#FF0000";
+                    document.getElementById("break_warning_pop").textContent = "The BUS is already FULL!!";
+                    showPopup(0);
+                    seatStatus = "Full";
+                } else {
+                    seatVacancyBox.style.Color = "#00851b";
+                }
+                seatVacancyBox.querySelector('p').textContent = `${seatStatus} (${psc}/${totalCount})`;
+
+                passengersCount.innerHTML = psString;
+                if(decision === "Full") passengersCount.style.Color = "#";
+                if(decision === "Vacent") passengersCount.style.Color = "#";
+                busStatus.innerHTML = bsString;
+                mapIframe.src = mapUrl;
+                mapIframe.style.display = 'block';
+                maploaded = 1;
+            }
+        });
+        // Function to show the popup
+        function showPopup(closeValue) {
+            const popupOverlay = document.getElementById('popupOverlay');
+            popupOverlay.style.display = 'flex';
+            closev = closeValue;
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            const popupOverlay = document.getElementById('popupOverlay');
+            popupOverlay.style.display = 'none';
+            if(closev == 1) {
+                closev = 0; 
+            }
+        }
+        document.getElementById('backButton').addEventListener('click', () => {
+
+            window.history.back();
+        }); 
+    </script>
+
+
+</body>
+
+</html>
