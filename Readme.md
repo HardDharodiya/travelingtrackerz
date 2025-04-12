@@ -12,7 +12,7 @@ A web-based system designed to help users track city buses in real-time and get 
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML, CSS, JavaScript
-- **Backend:** Node.js / Express   
+- **Backend:** Node.js / Express, Python   
 - **APIs:** Google Maps API for map rendering and location services  
 - **Others:** Socket.io for real-time updates *(if used)*
 
